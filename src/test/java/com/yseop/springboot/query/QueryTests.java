@@ -12,6 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -20,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @TestPropertySource(properties = { "spring.datasource.url=jdbc:h2:mem:test" })
 @WebAppConfiguration
 public class QueryTests {
@@ -62,4 +67,12 @@ public class QueryTests {
         mockMvc.perform(delete(route + "/1")).andExpect(status().is(204));
     }
 
+    @Test
+    public void test_customQuery_shouldReturn200() throws Exception {
+        SecurityConfig.User user = new SecurityConfig.User(1, "user");
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, null, AuthorityUtils.createAuthorityList("USER")));
+
+        mockMvc.perform(get(route + "/search/findByText?text=filter")).andExpect(status().is(200));
+    }
 }

@@ -7,11 +7,6 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
-/**
- * The persistent class for the Application database table.
- *
- * @author fclement
- */
 @Entity
 @Data
 public class Application {

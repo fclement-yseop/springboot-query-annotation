@@ -15,5 +15,5 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
             "and i.name like %:text% " +
             "and i.name not like '%foobarfoobar%' " +
             "and i.application.title like %:text%")
-    Page<Parent> findByText(@Param("text") String text,  Pageable pageable);
+    Page<Parent> findByText(@Param("text") String text, Pageable pageable);
 }
